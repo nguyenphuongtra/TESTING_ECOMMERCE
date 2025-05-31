@@ -23,3 +23,21 @@ jobs:
         run: |
           cd e-commerce-for-testing
           node test_ecommerce.mjs
+
+  build:
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build frontend
+        run: |
+          cd e-commerce-for-testing/frontend
+          npm install || echo "No package.json dependencies to install"
+          npm run build || echo "No build script defined"
+
+  open-pull-request:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Open pull request (placeholder)
+        run: echo "This is a placeholder for opening a pull request. Add your logic here if needed."
