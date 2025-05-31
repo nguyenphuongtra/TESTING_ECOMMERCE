@@ -18,24 +18,38 @@ jobs:
         with:
           node-version: '18'
 
+      - name: Cache node modules
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
       - name: Install dependencies
         run: npm install
 
       - name: Install Mocha
         run: npm install --save-dev mocha --force
 
+      - name: Configure environment
+        run: |
+          export PATH=$(npm bin):$PATH
+          echo "Updated PATH: $PATH"
+
       - name: Verify Mocha installation
         run: npx mocha --version
 
       - name: Debug environment
         run: |
-          ls -la
+          ls -la node_modules/.bin/
           node --version
           npm --version
+          which mocha
 
       - name: Run test_ecommerce.mjs
         run: npx mocha test_ecommerce.mjs --no-warnings
-        continue-on-error: true  # Tạm thời tiếp tục nếu lỗi để debug
+        continue-on-error: true
 
   build:
     runs-on: ubuntu-latest
