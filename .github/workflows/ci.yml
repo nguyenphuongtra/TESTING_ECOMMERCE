@@ -1,0 +1,25 @@
+name: Node.js CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+      - name: Install dependencies
+        run: |
+          cd e-commerce-for-testing
+          npm install || echo "No package.json dependencies to install"
+      - name: Run test_ecommerce.mjs
+        run: |
+          cd e-commerce-for-testing
+          node test_ecommerce.mjs
